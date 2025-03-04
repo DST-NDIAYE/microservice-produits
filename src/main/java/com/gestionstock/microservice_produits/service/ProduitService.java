@@ -1,6 +1,5 @@
 package com.gestionstock.microservice_produits.service;
 
-
 import com.gestionstock.microservice_produits.model.Produit;
 import com.gestionstock.microservice_produits.repository.ProduitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
