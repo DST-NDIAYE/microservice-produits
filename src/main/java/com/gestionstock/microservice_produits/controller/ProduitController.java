@@ -34,4 +34,9 @@ public class ProduitController {
     public void supprimerProduit(@PathVariable Long id) {
         produitService.supprimerProduit(id);
     }
+
+    @PutMapping("/{id}")
+    public Produit mettreAJourProduit(@PathVariable Long id, @RequestBody Produit produit) {
+         return produitService.mettreAJourProduit(id, produit);
+    }
 }
