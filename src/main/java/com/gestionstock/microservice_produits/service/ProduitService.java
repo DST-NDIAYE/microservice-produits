@@ -17,8 +17,9 @@ public class ProduitService {
         return produitRepository.findAll();
     }
 
-    public Optional<Produit> getProduitById(Long id) {
-        return produitRepository.findById(id);
+    public Produit getProduitById(Long id) {
+        return produitRepository.findById(id)
+               .orElseThrow(() -> new RuntimeException(" Produit non trouvé avec l'ID " + id));
     }
 
     public Produit ajouterProduit(Produit produit) {
@@ -38,5 +39,8 @@ public class ProduitService {
             return produitRepository.save(produit);
         }).orElseThrow(() -> new RuntimeException("Produit non trouvé avec l'ID " + id));
     }
+
+
     
+
 }
