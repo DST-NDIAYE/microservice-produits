@@ -15,10 +15,12 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Set up Apache Maven
-        uses: stCarolas/setup-maven@v3
+      - name: Set up JDK 21 with Maven
+        uses: actions/setup-java@v3
         with:
-          maven-version: '3.9.6'
+            distribution: 'temurin'
+            java-version: '21'
+            cache: 'maven'
 
       - name: Afficher la structure du projet
         run: ls -R
