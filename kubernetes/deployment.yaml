@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice-produits
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: microservice-produits
+  template:
+    metadata:
+      labels:
+        app: microservice-produits
+    spec:
+      containers:
+        - name: microservice-produits
+          image: dstndiaye/microservice-produits:v1 # Remplace par ton image Docker Hub
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql-service:3306/gestion_stock?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "root"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "Marseille100"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservice-produits
+spec:
+  selector:
+    app: microservice-produits
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8081
+  type: LoadBalancer
