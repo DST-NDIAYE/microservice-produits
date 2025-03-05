@@ -1,10 +1,21 @@
-name: Build and Test Java Project
-
 on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: Marseille100
+          MYSQL_DATABASE: gestion_stock
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
     steps:
       - name: Checkout repository
@@ -17,10 +28,9 @@ jobs:
           java-version: '21'
           cache: maven
 
-      - name: Install Maven
-        run: |
-          sudo apt update
-          sudo apt install -y maven
-
       - name: Build with Maven
+        env:
+          SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/gestion_stock?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+          SPRING_DATASOURCE_USERNAME: root
+          SPRING_DATASOURCE_PASSWORD: Marseille100
         run: mvn clean install
