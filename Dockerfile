@@ -1,6 +1,5 @@
 # Utiliser une image officielle Java 17
-FROM openjdk:17-jdk-slim
-
+FROM openjdk:21-jdk-slim
 # Définir le répertoire de travail dans le conteneur
 WORKDIR /app
 
@@ -12,3 +11,5 @@ EXPOSE 8081
 
 # Commande pour exécuter l'application
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
+
