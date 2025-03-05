@@ -36,11 +36,4 @@ jobs:
       - name: 🌍 Vérifier les services exposés
         run: kubectl get services
 
-      - name: 🔗 Attendre que `microservice-produits` soit prêt
-        run: |
-          echo "Attente de l'initialisation des pods..."
-          kubectl wait --for=condition=ready pod -l app=microservice-produits --timeout=180s
-
-      - name: 🔗 Récupérer l'URL de `microservice-produits`
-        run: |
-          minikube service microservice-produits --url
+      
