@@ -10,33 +10,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name:  Cloner le dépôt
+      - name: 🛎️ Cloner le dépôt
         uses: actions/checkout@v3
 
-      - name:  Vérifier la configuration de `kubectl`
+      - name: 🔍 Vérifier la version de `kubectl`
         run: kubectl version --client
 
-      - name:  Installer et démarrer Minikube
+      - name: 🚀 Installer et démarrer Minikube
         uses: medyagh/setup-minikube@v0.0.14
 
-      - name:  Vérifier que Kubernetes tourne bien
+      - name: 🔄 Vérifier que Kubernetes tourne bien
         run: kubectl cluster-info
 
-      - name:  Configurer `kubectl`
-        run: kubectl config view
+      - name: 🛠️ Vérifier les pods existants
+        run: kubectl get pods -o wide || true
 
-      - name:  Déployer MySQL sur Kubernetes
-        run: kubectl apply --validate=false -f kubernetes/mysql-service.yaml
+      - name: 🗄️ Appliquer les fichiers Kubernetes
+        run: |
+          kubectl apply -f kubernetes/mysql-service.yaml
+          kubectl apply -f kubernetes/deployment.yaml
 
-      - name:  Déployer microservice-produits sur Kubernetes
-        run: kubectl apply --validate=false -f kubernetes/deployment.yaml
-
-      - name:  Vérifier le déploiement des pods
+      - name: 🔍 Vérifier les pods après déploiement
         run: kubectl get pods -o wide
 
-      - name:  Vérifier les services exposés
+      - name: 🌍 Vérifier les services exposés
         run: kubectl get services
 
-      - name:  Récupérer l'URL de `microservice-produits`
+      - name: 🔗 Attendre que `microservice-produits` soit prêt
+        run: |
+          echo "Attente de l'initialisation des pods..."
+          kubectl wait --for=condition=ready pod -l app=microservice-produits --timeout=180s
+
+      - name: 🔗 Récupérer l'URL de `microservice-produits`
         run: |
           minikube service microservice-produits --url
