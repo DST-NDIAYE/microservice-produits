@@ -1,4 +1,4 @@
-name: Deploy to Kubernetes
+name: Déploiement Kubernetes
 
 on:
   push:
@@ -10,24 +10,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name:  Cloner le dépôt
         uses: actions/checkout@v3
 
-      - name: Set up Kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'latest'
+      - name:  Vérifier la configuration de `kubectl`
+        run: kubectl version --client
 
-      - name: Configure Kubeconfig
+      - name:  Installer et démarrer Minikube
+        uses: medyagh/setup-minikube@v0.0.14
+
+      - name:  Vérifier que Kubernetes tourne bien
+        run: kubectl cluster-info
+
+      - name:  Configurer `kubectl`
+        run: kubectl config view
+
+      - name:  Déployer MySQL sur Kubernetes
+        run: kubectl apply --validate=false -f kubernetes/mysql-service.yaml
+
+      - name:  Déployer microservice-produits sur Kubernetes
+        run: kubectl apply --validate=false -f kubernetes/deployment.yaml
+
+      - name:  Vérifier le déploiement des pods
+        run: kubectl get pods -o wide
+
+      - name:  Vérifier les services exposés
+        run: kubectl get services
+
+      - name:  Récupérer l'URL de `microservice-produits`
         run: |
-          echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig
-          export KUBECONFIG=kubeconfig
-
-      - name: Deploy MySQL
-        run: kubectl apply -f kubernetes/mysql-service.yaml
-
-      - name: Deploy microservice-produits
-        run: kubectl apply -f kubernetes/deployment.yaml
-
-      - name: Verify Deployments
-        run: kubectl get pods
+          minikube service microservice-produits --url
