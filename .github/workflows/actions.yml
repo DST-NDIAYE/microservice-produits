@@ -15,5 +15,13 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Set up Apache Maven
+        uses: stCarolas/setup-maven@v3
+        with:
+          maven-version: '3.9.6'
+
+      - name: Afficher la structure du projet
+        run: ls -R
+
       - name: Build with Maven
         run: mvn clean install
